@@ -12,6 +12,7 @@ flowchart TB
   script -- pull_requests 表に書く --> db
   db -- sql/process_time.sql --> result[案件ごとにかかった時間]
   db -- sql/process_time_view.sql --> view[refreshable materialized view]
+  view -- 1時間ごとに計算し直した結果を読む --> result
 ```
 
 ## 使い方
