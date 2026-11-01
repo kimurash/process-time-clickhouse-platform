@@ -1,6 +1,6 @@
 # process-time-clickhouse-platform
 
-Claude Code と GitHub のデータから開発の工程ごとにかかった時間を出す ClickHouse と OpenTelemetry Collector の基盤
+Claude Code と GitHub のデータから開発の工程ごとにかかった時間を出す ClickHouse + OpenTelemetry Collector の基盤
 
 ## 構成
 
