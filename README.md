@@ -10,9 +10,8 @@ flowchart TB
   collector -- otel_logs 表に書く --> db[(ClickHouse)]
   github[GitHub REST API] -- gh api --> script[scripts/load_pull_requests.sh]
   script -- pull_requests 表に書く --> db
-  db -- sql/process_time.sql --> result[案件ごとにかかった時間]
   db -- sql/process_time_view.sql --> view[refreshable materialized view]
-  view -- 1時間ごとに計算し直した結果を読む --> result
+  view -- select --> result[案件ごとにかかった時間]
 ```
 
 ## 使い方
@@ -40,11 +39,11 @@ docker compose up -d
 # GitHub の PR の時刻を取り込む
 scripts/load_pull_requests.sh owner/repo
 
-# 案件ごとにかかった時間を出す
-docker compose exec -T clickhouse clickhouse-client --multiquery < sql/process_time.sql
-
-# 同じ集計を1時間ごとに計算し直す refreshable materialized view を作る
+# 案件ごとにかかった時間を1時間ごとに計算し直す refreshable materialized view を作る
 docker compose exec -T clickhouse clickhouse-client --multiquery < sql/process_time_view.sql
+
+# 案件ごとにかかった時間を読む
+docker compose exec -T clickhouse clickhouse-client --query "select * from otel.process_time_mv order by merged_at"
 
 # 止める
 docker compose down
